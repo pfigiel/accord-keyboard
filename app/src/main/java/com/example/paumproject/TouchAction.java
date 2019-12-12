@@ -9,8 +9,7 @@ public class TouchAction {
     private String textToRead;
     private Character character;
 
-    public TouchAction(ActionType type, String textToRead, Character character)
-    {
+    public TouchAction(ActionType type, String textToRead, Character character) {
         this.type = type;
         this.textToRead = textToRead;
         this.character = character;

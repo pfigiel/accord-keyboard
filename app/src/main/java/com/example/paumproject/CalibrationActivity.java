@@ -11,10 +11,12 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CalibrationActivity extends Activity {
     @Override
@@ -22,9 +24,13 @@ public class CalibrationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
 
-        final TTSFacade tts = new TTSFacade(getApplicationContext());
-        tts.speak("Calibration. Please place your fingers on the screen in order, starting from your thumb.");
+        final TextAssets textAssets = new TextAssets();
 
+        TextView calibrationText = findViewById(R.id.calibrationTextView);
+        calibrationText.setText(textAssets.AWAITING_CALIBRATION);
+
+        final TTSFacade tts = new TTSFacade(getApplicationContext());
+        tts.speak(textAssets.CALIBRATION_INSTRUCTIONS);
         final List<Coordinates> coordinates = new ArrayList();
 
         ConstraintLayout layout = findViewById(R.id.calibration_layout);
@@ -42,7 +48,7 @@ public class CalibrationActivity extends Activity {
                     } else {
                         v.vibrate(100);
                     }
-                    tts.speak("Calibration complete");
+                    tts.speak(textAssets.CALIBRATION_CONFIRMATION);
 
                     Intent intent = new Intent(getApplicationContext(), KeyboardActivity.class);
                     intent.putExtra("coordinates", (Serializable)coordinates);

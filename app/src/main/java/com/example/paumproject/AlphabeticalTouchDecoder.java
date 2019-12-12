@@ -3,6 +3,13 @@ package com.example.paumproject;
 import java.util.List;
 
 public class AlphabeticalTouchDecoder implements ITouchDecoder {
+    private TextAssets textAssets;
+
+    public AlphabeticalTouchDecoder() {
+        textAssets = new TextAssets();
+    }
+
+    @Override
     public TouchAction decodeTouch(List<Integer> fingerIndexes) {
         int touchCode = 0;
         for (int i = 0; i < fingerIndexes.size(); i++) {
@@ -13,9 +20,9 @@ public class AlphabeticalTouchDecoder implements ITouchDecoder {
             case 1:             // thumb - backspace
                 return new TouchAction(TouchAction.ActionType.BACKSPACE, "Backspace", null);
             case 30:
-                return new TouchAction(TouchAction.ActionType.READ_ALL, "Reading text", null);
+                return new TouchAction(TouchAction.ActionType.READ_ALL, "", null);
             case 31:            // all fingers - space
-                return new TouchAction(TouchAction.ActionType.SPACE, "Space", null);
+                return new TouchAction(TouchAction.ActionType.SPACE, textAssets.SPACE, null);
             case 2:
                 return new TouchAction(TouchAction.ActionType.CHARACTER, null, 'a');
             case 3:
@@ -69,7 +76,7 @@ public class AlphabeticalTouchDecoder implements ITouchDecoder {
             case 27:
                 return new TouchAction(TouchAction.ActionType.CHARACTER, null, 'z');
             default:
-                return new TouchAction(TouchAction.ActionType.ERROR, "Please try again", null);
+                return new TouchAction(TouchAction.ActionType.ERROR, textAssets.TRY_AGAIN, null);
         }
     }
 }

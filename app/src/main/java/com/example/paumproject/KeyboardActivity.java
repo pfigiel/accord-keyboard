@@ -56,7 +56,9 @@ public class KeyboardActivity extends Activity {
                 switch (status) {
                     case PROCESSED:
                         TouchAction action = decoder.decodeTouch(touchProcessor.getFingerIndexes());
-                        tts.speak(action.getTextToRead());
+                        if (action.getType() != TouchAction.ActionType.READ_ALL) {
+                            tts.speak(action.getTextToRead());
+                        }
                         if (action.getType() == TouchAction.ActionType.CHARACTER) {
                             input.setText(input.getText() + String.valueOf(action.getCharacter()));
                         } else if (action.getType() == TouchAction.ActionType.SPACE) {
