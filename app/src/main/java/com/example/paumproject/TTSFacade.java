@@ -29,7 +29,7 @@ public class TTSFacade {
                     if (tts.isLanguageAvailable(Locale.getDefault()) < tts.LANG_AVAILABLE) {
                         Toast.makeText(appContext, textAssets.LANGUAGE_UNAVAILABLE, Toast.LENGTH_LONG).show();
                     } else {
-                        tts.setLanguage(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
+                        tts.setLanguage(Locale.getDefault());
                         tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
                     }
                 }

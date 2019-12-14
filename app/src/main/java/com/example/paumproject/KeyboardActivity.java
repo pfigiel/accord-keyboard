@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +31,10 @@ public class KeyboardActivity extends Activity {
         List<Drawable> drawables = getCircleDrawables();
         final TTSFacade tts = new TTSFacade(getApplicationContext());
         final TouchProcessor touchProcessor = new TouchProcessor(coordinates);
-        final ITouchDecoder decoder = (ITouchDecoder)new AlphabeticalTouchDecoder();
+        final ITouchDecoder decoder = new AlphabeticalTouchDecoder();
         final TextView input = findViewById(R.id.inputTextView);
+        final Chronometer chronometer = findViewById(R.id.keyboard_chronometer);
+        final TextAssets textAssets = new TextAssets();
 
         for (int i = 0; i < coordinates.size(); i++) {
             ImageView imageView = new ImageView(getApplicationContext());
@@ -41,11 +45,6 @@ public class KeyboardActivity extends Activity {
 
             layout.addView(imageView);
         }
-
-
-
-
-
 
 
         layout.setOnTouchListener(new View.OnTouchListener() {
@@ -60,13 +59,19 @@ public class KeyboardActivity extends Activity {
                             tts.speak(action.getTextToRead());
                         }
                         if (action.getType() == TouchAction.ActionType.CHARACTER) {
+                            if (input.getText().length() == 0) {
+                                chronometer.setBase(SystemClock.elapsedRealtime());
+                                chronometer.start();
+                            }
                             input.setText(input.getText() + String.valueOf(action.getCharacter()));
                         } else if (action.getType() == TouchAction.ActionType.SPACE) {
                             input.setText(input.getText() + " ");
                         } else if (action.getType() == TouchAction.ActionType.BACKSPACE && input.getText().length() > 0) {
                             input.setText(input.getText().subSequence(0, input.getText().length() - 1));
                         } else if (action.getType() == TouchAction.ActionType.READ_ALL) {
-                            tts.speak((String)input.getText());
+                            tts.speak(textAssets.ENTERED_TEXT + " " + (String)input.getText() + "." + textAssets.ELAPSED_TIME + (SystemClock.elapsedRealtime() - chronometer.getBase()) / 1000 + " " + textAssets.SECONDS);
+                            chronometer.stop();
+                            input.setText("");
                         }
                         break;
 
